@@ -1,0 +1,36 @@
+# Dagster storage
+# The storage key allows you to configure how job and asset history is persisted. 
+# This includes metadata on runs, event logs, schedule/sensor ticks, and other useful data.
+storage:
+  postgres:
+    postgres_db:
+      username:
+        env: DAGSTER_PG_USERNAME
+      password:
+        env: DAGSTER_PG_PASSWORD
+      hostname:
+        env: DAGSTER_PG_HOST
+      db_name:
+        env: DAGSTER_PG_DB
+      port: 
+        env: DAGSTER_PG_PORT
+      params:
+        options: -csearch_path=dagster
+# compute_logs
+# LocalComputeLogManager writes stdout and stderr logs to disk.
+compute_logs:
+  module: dagster.core.storage.local_compute_log_manager
+  class: LocalComputeLogManager
+  config:
+    base_dir: "/opt/dagster/local/"
+
+# Local artifact storage
+# The local_artifact_storage key allows you to configure local artifact storage. Local artifact storage is used to:
+# Configure storage for artifacts that require a local disk, or Store inputs and outputs when using the filesystem I/O manager 
+# (fs_io_manager). Refer to the I/O managers documentation for more information on how other I/O managers store artifacts.
+
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: "/opt/dagster/local/"
