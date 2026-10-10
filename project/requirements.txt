@@ -1,0 +1,8 @@
+dagit==1.5.7
+dagster-aws
+dagster-postgres
+pydantic==1.10.9
+pandas
+openpyxl
+google-api-python-client
+google-auth

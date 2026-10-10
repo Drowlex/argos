@@ -1,0 +1,45 @@
+services:
+  dagster_argos:
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+    image: dagster-argos
+    container_name: dagsterArgos
+    ports:
+      - "13000:3000"
+    build: 
+      context: ./project/
+      dockerfile: argos.dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./project/src:/opt/dagster/app/
+      - ./assets:/opt/dagster/assets/
+      - ~/.kube:/root/.kube:ro
+      - ~/.config/gcloud:/root/.config/gcloud
+      - ./.docker/credentials.json:/opt/dagster/app/credentials.json:ro
+    networks:
+      - pgdagsternetworkargos  # Agregamos el contenedor a la red personalizada
+  db:
+    image: postgres:15
+    hostname: pgDagsterArgos
+    container_name: pgDagsterArgos
+    environment:
+      POSTGRES_USER: administrador
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_DB: home
+    ports:
+      - 25432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Montamos el archivo init.sql en el contenedor
+    networks:
+      - pgdagsternetworkargos
+    deploy:
+        resources:
+            limits:
+                cpus: '1.5'
+                memory: 1G
+            reservations:
+                cpus: '0.25'
+                memory: 500M
+networks:
+  pgdagsternetworkargos:  # Creamos la red personalizada
