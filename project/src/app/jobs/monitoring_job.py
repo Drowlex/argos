@@ -16,9 +16,7 @@ from app import operations
                         "cpl-omni-cpay-qa-25052026",
                         "cpl-rt-carteras-dev-02082024",
                         "cpl-ssff-corresp-dev-11032026",
-                        "cpl-corp-abono-dev-24102025",
-                        "cpl-corp-abono-qa-24102025",
-                        "cpl-corp-abono-stg-27102025"
+                        "cpl-corp-abono-qa-24102025"
                     ]
                 }
             }
