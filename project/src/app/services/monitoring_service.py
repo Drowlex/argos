@@ -146,8 +146,15 @@ class MonitoringService(object):
         metrics_payload = []
 
         for item in connected_info:
-            project_id = item["project_id"]
+            project_id   = item["project_id"]
             cluster_name = item["cluster_name"]
+            region       = item["region"]
+
+            # --- AGREGAR ESTA LÍNEA PARA CAMBIAR AL CONTEXTO CORRECTO ANTES DE PEDIR MÉTRICAS ---
+            # Los contextos de GKE se nombran automáticamente así por gcloud:
+            context_name = f"gke_{project_id}_{region}_{cluster_name}"
+            self._execute_command(f"kubectl config use-context {context_name}", context)
+
 
             context.log.info(f"📡 Obteniendo métricas de nodos con 'kubectl top node' para {project_id}...")
             output = self._execute_command("kubectl top node", context)
@@ -185,6 +192,11 @@ class MonitoringService(object):
 
         for item in connected_info:
             project_id = item["project_id"]
+            cluster_name = item["cluster_name"]
+            region = item["region"]
+            
+            context_name = f"gke_{project_id}_{region}_{cluster_name}"
+            self._execute_command(f"kubectl config use-context {context_name}", context)
             
             # 1. Obtener uso actual de pods de forma nativa sin shlex/bash pipes
             top_output = self._execute_command("kubectl top pods -A --no-headers", context)
