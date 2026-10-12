@@ -3,6 +3,7 @@ import shlex
 import os
 import openpyxl
 import json
+from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.styles import Font, Alignment
 from datetime import datetime
 from app.core.settings import get_settings
@@ -261,9 +262,10 @@ class MonitoringService(object):
         os.makedirs(assets_dir, exist_ok=True)
         base_template_path = os.path.join(assets_dir, "base.xlsx")
 
-        bold_font = Font(name="Arial", size=10, bold=True)
+        bold_font    = Font(name="Arial", size=10, bold=True)
         regular_font = Font(name="Arial", size=10, bold=False)
         center_align = Alignment(horizontal="center", vertical="center")
+        green_fill   = PatternFill(start_color="A9DFBF", end_color="A9DFBF", fill_type="solid")
 
         generated_files = []
 
@@ -388,7 +390,7 @@ class MonitoringService(object):
                 except ValueError:
                     cpu_pct_num = 0.0
                 utils.set_cell(ws, node_val_row, 3, value=cpu_pct_num, font=regular_font, number_format="0%")
-
+                ws.cell(row=node_val_row, column=3).fill = green_fill  # <--- Relleno verde para CPU%
                 utils.set_cell(ws, node_val_row, 4, value=node["memory_bytes"], font=regular_font)
 
                 try:
@@ -396,6 +398,7 @@ class MonitoringService(object):
                 except ValueError:
                     mem_pct_num = 0.0
                 utils.set_cell(ws, node_val_row, 5, value=mem_pct_num, font=regular_font, number_format="0%")
+                ws.cell(row=node_val_row, column=5).fill = green_fill  # <--- Relleno verde para Memoria%
 
                 current_row += 2
 
